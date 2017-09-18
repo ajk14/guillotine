@@ -190,6 +190,19 @@ def longWalk(game):
 def empty(game):
 	pass
 
+def massConfusion(game):
+	print "Playing card 'Mass Confusion'. Dealing a new lineup. "
+	nobleCount = len(game.currentLineup)
+	newLineup = []
+	for i in range(0, nobleCount):
+		newLineup.append(game.nobleDeck.deal())
+	game.currentLineup = newLineup
+
+def extraCart(game):
+	print "Playing card 'Extra Cart'. Adding 3 nobles. "
+	for i in range(0, 3):
+		game.currentLineup.append(game.nobleDeck.deal())
+
 actionDeck = [
 	Action("Ignoble Noble", "Move Forward Exactly 4 Places.", ignobleNoble),
 	Action("Ignoble Noble", "Move Forward Exactly 4 Places.", ignobleNoble),
@@ -228,11 +241,11 @@ actionDeck = [
 	Action("Civic Support", "Bonus of +1 per Green ", empty),
 	Action("Church Support", "Bonus of +1 per Blue ", empty),
 	Action("Indifferent Public", "Gray valued as +1 instead of normal ", empty),
-	Action("Fountain of Blood", "Bonus of +2 ", empty)]
-"""	Action("Mass Confusion", "Return nobles to deck, shuffle and re-deal "),
-	Action("Extra Cart", "Add 3 from the deck to the end of the line "),
-	Action("Extra Cart", "Add 3 from the deck to the end of the line "),
-	Action("Late Arrival", "Examine top 3 from the deck and add one to end of the line "),
+	Action("Fountain of Blood", "Bonus of +2 ", empty),
+	Action("Mass Confusion", "Return nobles to deck, shuffle and re-deal ", massConfusion),
+	Action("Extra Cart", "Add 3 from the deck to the end of the line ", extraCart),
+	Action("Extra Cart", "Add 3 from the deck to the end of the line ", extraCart)]
+"""	Action("Late Arrival", "Examine top 3 from the deck and add one to end of the line "),
 	Action("Rat Break", "Pick up card of your choice from discards "),
 	Action("Political Influence", "Draw 3 extra without taking a noble "),
 	Action("Political Influence", "Draw 3 extra without taking a noble "),
