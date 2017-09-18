@@ -2,10 +2,12 @@ import readline
 import random
 
 class Action:
-	def __init__(self, name, description, actionFunction):
+	def __init__(self, name, description, actionFunction, modifiesLine=True, playerRetains=False):
 		self.name=name
 		self.description=description
 		self.actionFunction=actionFunction
+		self.modifiesLine=modifiesLine
+		self.playerRetains=playerRetains
 
 	def play(self, game):
 		self.actionFunction(game)
@@ -203,6 +205,21 @@ def extraCart(game):
 	for i in range(0, 3):
 		game.currentLineup.append(game.nobleDeck.deal())
 
+def lateArrival(game):
+	print "Playing card 'Late Arrival'. Choose which of these nobles to add: "
+	#TODO: Don't modify deck directly
+	for i in range(0, 3):
+		print "%s. %s" % (str(i), game.nobleDeck.deck[i])
+	index = makeSelection(game, "Which number would you like to add? ", 0, 2)
+	game.currentLineup.append(game.nobleDeck.deck.pop(index))
+
+def ratBreak(game):
+	print "Playing card 'Rat Break'. Choose which of these discarded actions to pick up: "
+	for i in range(len(game.discardPile)):
+		print "%s. %s" % (str(i), game.discardPile[i])
+	index = makeSelection(game, "Which number would you like to add? ", 0, 2)
+	game.currentPlayer.draw(game.discardPile.pop(index))
+
 actionDeck = [
 	Action("Ignoble Noble", "Move Forward Exactly 4 Places.", ignobleNoble),
 	Action("Ignoble Noble", "Move Forward Exactly 4 Places.", ignobleNoble),
@@ -237,17 +254,17 @@ actionDeck = [
 	Action("Milling in Line", "Randomly re-arrange the first 6", milling6),
 	Action("Escape!", "Randomize and discard 2 ", escape),
 	Action("The Long Walk", "Reverse the order ", longWalk),
-	Action("Military Support", "Bonus of +1 per Red ", empty),
-	Action("Civic Support", "Bonus of +1 per Green ", empty),
-	Action("Church Support", "Bonus of +1 per Blue ", empty),
-	Action("Indifferent Public", "Gray valued as +1 instead of normal ", empty),
-	Action("Fountain of Blood", "Bonus of +2 ", empty),
+	Action("Military Support", "Bonus of +1 per Red ", empty, modifiesLine=False, playerRetains=True),
+	Action("Civic Support", "Bonus of +1 per Green ", empty, modifiesLine=False, playerRetains=True),
+	Action("Church Support", "Bonus of +1 per Blue ", empty, modifiesLine=False, playerRetains=True),
+	Action("Indifferent Public", "Gray valued as +1 instead of normal ", empty, modifiesLine=False, playerRetains=True),
+	Action("Fountain of Blood", "Bonus of +2 ", empty, modifiesLine=False, playerRetains=True),
 	Action("Mass Confusion", "Return nobles to deck, shuffle and re-deal ", massConfusion),
 	Action("Extra Cart", "Add 3 from the deck to the end of the line ", extraCart),
-	Action("Extra Cart", "Add 3 from the deck to the end of the line ", extraCart)]
-"""	Action("Late Arrival", "Examine top 3 from the deck and add one to end of the line "),
-	Action("Rat Break", "Pick up card of your choice from discards "),
-	Action("Political Influence", "Draw 3 extra without taking a noble "),
+	Action("Extra Cart", "Add 3 from the deck to the end of the line ", extraCart),
+	Action("Late Arrival", "Examine top 3 from the deck and add one to end of the line ", lateArrival),
+	Action("Rat Break", "Pick up card of your choice from discards ", ratBreak)]
+"""	Action("Political Influence", "Draw 3 extra without taking a noble "),
 	Action("Political Influence", "Draw 3 extra without taking a noble "),
 	Action("Rain Delay", "Deal completely new hands "),
 	Action("Callous Guards", "Line-altering cards cannot be played "),

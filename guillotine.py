@@ -21,9 +21,13 @@ class Player:
 		self.playedActions=[]
 
 	def playAction(self, game, actionIndex):
-		self.playedActions.append(self.actions[actionIndex])
-		self.actions[actionIndex].play(game)
-		self.actions.remove(self.actions[actionIndex])
+		action = self.actions[actionIndex]
+		action.play(game)
+		if action.playerRetains:
+			self.playedActions.append(action)
+		else:
+			game.discardPile.append(action)
+		self.actions.remove(action)
 
 	def draw(self, action):
 		self.actions.append(action)
@@ -50,6 +54,7 @@ class Game:
 		self.actionDeck = Deck(actions.actionDeck)
 		self.players = players
 		self.currentLineup = []
+		self.discardPile = []
 		self.currentPlayer = players[0]
 
 	def startGame(self):
